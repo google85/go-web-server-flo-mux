@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
+	"sync"
 )
 
 type User struct {
@@ -11,6 +12,8 @@ type User struct {
 }
 
 var userCache = make(map[int]User)
+
+var cacheMutex sync.RWMutex
 
 func main() {
 	mux := http.NewServeMux()
@@ -47,8 +50,10 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// not thread safe, but we only make it for testing purposes
+	// fix thread safe
+	cacheMutex.Lock()
 	userCache[len(userCache)+1] = user
+	cacheMutex.Unlock()
 
 	w.WriteHeader(http.StatusNoContent)
 }
