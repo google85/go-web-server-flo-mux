@@ -31,3 +31,8 @@ curl -i -X POST -d '{"name":"John"}' http://localhost:8080/users
 ```bash
 curl -i http://localhost:8080/users/1
 ```
+
+> Delete user by ID:
+```bash
+curl -i -X DELETE http://localhost:8080/users/1
+```
