@@ -26,3 +26,8 @@ curl http://localhost:8080/
 ```bash
 curl -i -X POST -d '{"name":"John"}' http://localhost:8080/users
 ```
+
+> Get user by ID:
+```bash
+curl -i http://localhost:8080/users/1
+```
