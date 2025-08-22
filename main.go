@@ -97,7 +97,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	userCache[len(userCache)+1] = user
 	cacheMutex.Unlock()
 
-	w.WriteHeader(http.StatusNoContent)
+	w.WriteHeader(http.StatusCreated)
 }
 
 func deleteUser(w http.ResponseWriter, r *http.Request) {
