@@ -15,3 +15,14 @@ make dev
 ```bash
 make run
 ```
+
+### Requests:
+> Root
+```bash
+curl http://localhost:8080/
+```
+
+> Creating users:
+```bash
+curl -i -X POST -d '{"name":"John"}' http://localhost:8080/users
+```
