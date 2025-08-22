@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	"encoding/json"
 	"net/http"
 	"sync"
 )
@@ -26,103 +24,4 @@ func main() {
 
 	fmt.Println("Server listening to :8080")
 	http.ListenAndServe(":8080", mux)
-}
-
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World")
-}
-
-func getUser(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.PathValue("id"))
-	if err != nil {
-		http.Error(
-			w,
-			err.Error(),
-			http.StatusBadRequest,
-		)
-		return
-	}
-
-	cacheMutex.RLock()
-	user, ok := userCache[id]
-	cacheMutex.RUnlock()
-	if !ok {
-		http.Error(
-			w,
-			"user not found",
-			http.StatusNotFound,
-		)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-
-	j, err := json.Marshal(user)
-	if err != nil {
-		http.Error(
-			w,
-			err.Error(),
-			http.StatusInternalServerError,
-		)
-		return
-	}
-	
-	w.WriteHeader(http.StatusOK)
-	w.Write(j)
-}
-
-func createUser(w http.ResponseWriter, r *http.Request) {
-	var user User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		http.Error(
-			w,
-			err.Error(),
-			http.StatusBadRequest,
-		)
-		return
-	}
-
-	if user.Name == "" {
-		http.Error(
-			w,
-			"name is required",
-			http.StatusBadRequest,
-		)
-		return
-	}
-
-	// fix thread safe
-	cacheMutex.Lock()
-	userCache[len(userCache)+1] = user
-	cacheMutex.Unlock()
-
-	w.WriteHeader(http.StatusCreated)
-}
-
-func deleteUser(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.PathValue("id"))
-	if err != nil {
-		http.Error(
-			w,
-			err.Error(),
-			http.StatusBadRequest,
-		)
-		return
-	}
-
-	if _, ok := userCache[id]; !ok {
-		http.Error(
-			w,
-			"user not found",
-			http.StatusNotFound,
-		)
-		return
-	}
-	
-	cacheMutex.Lock()
-	delete(userCache, id)
-	cacheMutex.Unlock()
-	
-	w.WriteHeader(http.StatusNoContent)
 }

@@ -19,7 +19,7 @@ dev:
 .PHONY: build
 build:
 	@mkdir -p ${build_dir} && chown 1000:1000 ${build_dir}
-	GOARCH=amd64 GOOS=linux go build -o ${build_dir}/${binary_name} -tags prod main.go
+	GOARCH=amd64 GOOS=linux go build -o ${build_dir}/${binary_name} -tags prod *.go
 
 ## clean: Clean-up the build binaries
 .PHONY: clean
@@ -30,4 +30,4 @@ clean: confirm
 ## run: Run the server
 .PHONY: run
 run:
-	@go run -tags prod main.go
+	@go run -tags prod *.go
