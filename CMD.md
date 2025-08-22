@@ -16,4 +16,8 @@
         # init module
         go mod init github.com/google85/go-web-server-flo-mux
 
+        touch main.go
+
+        go run main.go
+
     ```

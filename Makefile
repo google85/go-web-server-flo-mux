@@ -13,12 +13,12 @@ confirm:
 ## dev: Enter Docker Go development
 .PHONY: dev
 dev:
-	docker run --rm -it -v .:/app --name go-tutorial -w /app  golang:1.22
+	docker run --rm -it -v .:/app -p 8080:8080 --name go-tutorial -w /app  golang:1.22
 
 ## build: Build the application
 .PHONY: build
 build:
-	@mkdir -p ${build_dir}
+	@mkdir -p ${build_dir} && chown 1000:1000 ${build_dir}
 	GOARCH=amd64 GOOS=linux go build -o ${build_dir}/${binary_name} -tags prod main.go
 
 ## clean: Clean-up the build binaries
